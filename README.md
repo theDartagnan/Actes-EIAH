@@ -113,10 +113,8 @@ Comme pour les sections avant articles, le contenu de ces sections est situé da
 
 ## Compilation
 
-La compilation Latex peut être fait à la main en ligne de commande ou automatisé par un IDE comme TexStudio
+La compilation Latex peut être faite à la main en ligne de commande ou automatisé par un IDE comme TexStudio.
 
-Commandes de compilation :
+Il est recommandé d'utiliser un éditeur Tex intégré comme TexStudio.
 
-```
-
-```
+À la main, la commande `pdflatex actes.tex` permet de compiler et générer un fichier pdf, mais doit être exécutée au moins 2 fois de suite pour générer un fichier pdf complet (incluant la table des matières notamment).
