@@ -1,0 +1,201 @@
+% Actes EIAH / RJC-EIAH
+% S'appuie sur la classe de base llncs,
+% avec une gestion de l'utf-8, du français
+% Auteurs : Rémi Venant <remi.venant@univ-lemans.fr>
+% Version 1.10 - 2023/10/06
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% INCLUSION DES PACKAGES                           %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[runningheads]{llncs}
+\usepackage[utf8]{inputenc} %gestion des fichiers utf8
+\PassOptionsToPackage{french}{babel}
+\usepackage{babel}
+\usepackage[T1]{fontenc}
+\usepackage{hyphenat}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{sectsty}
+\usepackage{wrapfig}
+\usepackage[titles]{tocloft}
+\usepackage{ifthen}
+\usepackage{pdfpages}
+\usepackage{geometry}
+\usepackage[export]{adjustbox}
+\usepackage{tocloft}
+\usepackage{blindtext}
+\usepackage[hidelinks]{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DEFINITIONS GENERALES - A APADATER SELON CONF    %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Couleur principale du manuscript (utilisée notamment pour les titres principaux)
+\definecolor{ConfColor}{HTML}{AE2573}
+
+% En-têtes des pages paires/impaires (hors articles)
+\newcommand{\resetHeadings}{
+	\markboth{Catherine Bonnat et Rémi Venant}{Rencontres Jeunes Chercheur·e·s en EIAH 2022, Lille}
+}
+
+% Logo de la conférence
+\newcommand{\logoConf}[1][0.6]{
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=#1\textwidth]{Content/figures/logoConf.png}
+	\end{figure}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DEFINITION DE COMMANDES (MODIFICATIONS NON REOMMANDEES) %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Redéfinition de mots usuels
+\renewcommand\keywordname{{\bf Mots-cl\'es :}}
+\addto\captionsfrench{\renewcommand{\figurename}{\upshape Fig.}}
+% Définition du formatage des titres, page blanche
+\makeatletter
+\renewcommand{\@seccntformat}[1]{}
+\makeatother
+\sectionfont{\LARGE\centering\color{ConfColor}}
+\renewcommand{\contentsname}{Table of contents}
+\renewcommand{\cftsecfont}{\normalfont\bfseries\color{ConfColor}}% titles in bold
+\renewcommand{\cftsecpagefont}{\normalfont\bfseries\color{ConfColor}}% page numbers in bold
+\renewcommand{\cftdotsep}{1}
+\renewcommand{\cftsecleader}{\bfseries\color{ConfColor}\cftdotfill{\cftsecdotsep}}% dot leaders in bold
+\renewcommand{\cftbeforesecskip}{10pt}
+\newcommand{\pageblanche}[1][]{
+	\newpage
+	\ifthenelse{\equal{#1}{}}{
+	}{
+		\thispagestyle{#1}
+	}
+	\mbox{}
+	\newpage
+}
+\newcommand{\pageTitreSession}[2][]{%
+	\resetHeadings
+	\newpage
+	%\thispagestyle{empty}
+	\hspace{0pt}
+	\vfill
+	\logoConf[0.8]
+	\section{#2}
+	\ifthenelse{\equal{#1}{}}{
+	}{
+		\centerline{\large\textbf{#1}}
+	}
+	\vfill
+	\hspace{0pt}
+	\newpage
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DOCUMENT DES ACTES - A APADATER SELON CONF       %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\pagestyle{myheadings}
+\resetHeadings
+
+% Titre des actes
+\title{Rencontres Jeunes Chercheur·e·s en EIAH 2022, Lille}%\thanks{Supported by organization x.}}
+%
+% Auteurs des actes
+\author{Catherine Bonnat \and Rémi Venant}
+\authorrunning{Catherine Bonnat \and Rémi Venant}
+
+%%%%%%%%%%%%%%%% Page de garde et page blanche %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{Content/pageGarde} %p1 page de garde
+\pageblanche[empty]{} %p2 deuxième de converture
+
+%%%%%%%%%%%%%%%% Table des matière %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{2}
+\clearpage
+\tableofcontents
+\newpage %p3, 4, 5
+
+%%%%%%%%%%%%%%%% Comités %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace*{2em} % permet d'aligner verticalement le titre de la section avec celui de la page de droite (puisque logo placé au dessus de l'introduction)
+\section{Comités}
+\input{Content/comites}
+\newpage %p 6, 7
+
+%%%%%%%%%%%%%%%% Introduction %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\logoConf % replace le logo de la conf au dessus du titre de la section
+\section{Introduction aux actes}
+\input{Content/intro}
+\newpage %p8, 9, 10
+
+%%%%%%%%%%%%%%%% Conférenciés invités %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace*{2em}
+\section{Conférencière invitée}
+\input{Content/confInvite}
+\newpage %p11
+
+% Fin sur page impair : il faut absolument finir ici sur une page impaire. Retirez la page blanche suivante au besoin.
+\pageblanche %p12
+
+%%%%%%%%%%%%%%%% SESSION D'ARTICLES 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Vérifier que l'on commence bien sur une page impaire, pour que le premier article débute sur une page paire
+
+% les pages de titre doivent toujours être sur une page impaire
+% tous les articles sauf le dernier doivent avoir un nombre de pages pair (on ajoute une page blanche sinon)
+% Le  dernier article de la session doit avoir sur un nombre de pages impair  (on ajoute une page blanche sinio) pour que la page de titre de session soit sur une page impair
+
+\pageTitreSession[Animateur de session : Sébastien Jolivet]{Session de communications 1 : Conception pour les jeux sérieux} %p13
+
+%ART 10: 8 pages
+\includepdf[pages={-}, pagecommand={\markboth{Estelle Prior}{Partage des savoirs dans une réunion de co-conception de jeux épistémiques numériques...}}, fitpaper=false,addtotoc={1, subsection, 2, Partage des savoirs dans une réunion de co-conception de jeux épistémiques numériques en recherche orientée par la conception \newline \protect\textit{Estelle Prior}, ART10}]{VendorPDF/10.pdf}
+
+
+%ART 15: 8 page, dernier article de session : nécessite \pageblanche
+\includepdf[pages={-}, pagecommand={\markboth{Enzo Simonnet}{Projet Lex$:$gaMe : des mots et des motivés}}, fitpaper=false, addtotoc={1, subsection, 2, Projet Lex$:$gaMe : des mots et des motivés \newline  \protect\textit{Enzo Simonnet}, ART15}]{VendorPDF/15.pdf}
+\pageblanche
+
+%%%%%%%%%%%%%%%% SESSION D'ARTICLES 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pageTitreSession[Animatrice de session : Catherine Bonnat]{Session de communications 2 : Analytiques pour l’apprenant et l’enseignant}
+
+% ART 03: 7 pages, pas en fin de session : nécessite \pageblanche
+\includepdf[pages={-}, pagecommand={\markboth{Mélina Verger}{Investiguer la notion d’équité algorithmique dans les environnements informatiques...}}, fitpaper=false, addtotoc={1, subsection, 2, Investiguer la notion d’équité algorithmique dans les environnements informatiques pour l’apprentissage humain \newline  \protect\textit{Mélina Verger}, ART03}]{VendorPDF/03.pdf}
+\pageblanche % Article 3 à un nombre de page impair
+
+%ART 21: 8 pages
+\includepdf[pages={-}, pagecommand={\markboth{Esther Félix}{Introduction à l'explicabilité dans les feedback automatisés fournis aux apprenants}}, fitpaper=false, addtotoc={1, subsection, 2, Introduction à l'explicabilité dans les feedback automatisés fournis aux apprenants \newline  \protect\textit{Esther Félix}, ART21}]{VendorPDF/21.pdf}
+
+%ART 18: 7 pages, dernier article de session : pas besoin de \pageblanche
+\includepdf[pages={-}, pagecommand={\markboth{Ibtissem Bennacer}{iTeachApp, un outil d'auto-évaluation et de soutien pour les enseignants}}, fitpaper=false, addtotoc={1, subsection, 2, iTeachApp\, un outil d'auto-évaluation et de soutien pour les enseignants \newline  \protect\textit{Ibtissem Bennacer}, ART18}]{VendorPDF/18.pdf}
+
+
+%%%%%%%%%%%%%%%% SESSION DE POSTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pageTitreSession{Session de posters}
+
+%ART 31: 4 pages
+\includepdf[pages={-}, pagecommand={\markboth{Esteban Villalobos}{Mesurer l'autorégulation dans des contextes d'apprentissage mixtes}}, fitpaper=false, addtotoc={1, subsection, 2, Mesurer l'autorégulation dans des contextes d'apprentissage mixtes \newline  \protect\textit{Esteban Villalobos}, ART31}]{VendorPDF/31.pdf}
+
+%ART 02: 5 pages, dernier article de session : pas besoin de \pageblanche
+\includepdf[pages={-}, pagecommand={\markboth{Myriam Leclaire}{Jeux de rôles et autoconfrontations collectives comme outils pédagogiques...}}, fitpaper=false, addtotoc={1, subsection, 2, Jeux de rôles et autoconfrontations collectives comme outils pédagogiques de développement des compétences collaboratives interprofessionnelles des étudiants en santé \newline  \protect\textit{Myriam Leclaire}, ART02}]{VendorPDF/02.pdf}
+
+
+% dernière session terminée, retour aux en-têtes généraux
+\resetHeadings
+
+%%%%%%%%%%%%%%%%Symposia%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pageTitreSession{Ateliers et Symposia}
+
+\input{Content/symposia}
+% selin le nombre de page ici, il peut être nécessaire de place une  \pageblanche
+
+%%%%%%%%%%%%%%%%Partenaires%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\vspace*{2em}
+\section{Partenaires}
+\input{Content/partenaires}
+
+%4ème de couverture
+\input{Content/pageFin}
+
+\end{document}
