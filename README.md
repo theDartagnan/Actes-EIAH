@@ -25,17 +25,26 @@ Ce projet fourni un modèle complet d'actes de conférences francophones fondés
 
 La préparation se fait au sein du fichier __actes.tex__.
 
+### Métadonnée du fichier pdf
+
+Les métadonnées sont des informations non visible inscrite dans le document PDF généré pour permettre à un logiciel tierce d'en extraire aisément des informations à son propos.
+Les métadonnées du fichier sont utiles pour faciliter le travail des robots indexateurs des plateformes sur lesquelles vous pourriez déposer les actes. Notamment sur Hal, cela permet de faciliter le dépot en tant qu'auteur du document (et ne pas subir la modération).
+
+Les métdonnées sont définies en début de fichier des _lignes 36 à 42_. Au moins 2 métadonnées sont à modifier :
+- _pdfauthor_: auteur(s) du document, normalement les éditeurs ;
+- _pdftitle_: le titre du document.
+
 ### Informations générales
 
-- _ligne 36_ : couleur principale des titres principaux : peut-être par exemple en accord avec la charte graphique de l'hôte de la conférence.
-- _lignes 39-41_ : en-têtes des pages hors articles : Auteurs des actes en pages paires, titre des actes en pages impaires.
-- _lignes 44-48_ : logo de la conférence : lien vers le logo de la conférence (utilisé à plusieurs reprise : page de garde, pages de titre de session, page de fin).
-- _ligne 135_ : titre de la conférence.
-- _lignes 138 et 139_ : auteurs des actes.
+- _ligne 49_ : couleur principale des titres principaux : peut-être par exemple en accord avec la charte graphique de l'hôte de la conférence.
+- _lignes 52-54_ : en-têtes des pages hors articles : Auteurs des actes en pages paires, titre des actes en pages impaires.
+- _lignes 57-61_ : logo de la conférence : lien vers le logo de la conférence (utilisé à plusieurs reprise : page de garde, pages de titre de session, page de fin).
+- _ligne 148_ : titre de la conférence.
+- _lignes 151 et 152_ : auteurs des actes.
 
 ### contenu avant articles
 
-Plusieurs pages particulières et sections peuvent être ajoutées en amont des articles des actes. Ce projet propose la structure suivante entre les lignes 142 à 171 : 
+Plusieurs pages particulières et sections peuvent être ajoutées en amont des articles des actes. Ce projet propose la structure suivante entre les _lignes 155 à 184_ : 
 - page de garde ;
 - Table des matière ;
 - Comités de programme, d'organisation... ;
@@ -46,7 +55,7 @@ Pour chaque section après la table des matières, le contenu est situé dans un
 
 Si une page débute par le logo de la conférence (ex.: Introduction) par la commande __\logoConf__, il peut être souhaitable d'aligner verticalement les titres des autres section pour garantir d'une homogénéité visuelle. Dans ce cas, les sections sans le logo seront précédées par un espace blanc __\vspace*{2em}__.
 
-Les commandes __\startOnOddPage__ (exemple _ligne 145_)permettent d'assurer que le contenu suivant la commande soit affiché sur une page impaire.
+Les commandes __\startOnOddPage__ (exemple _ligne 158_)permettent d'assurer que le contenu suivant la commande soit affiché sur une page impaire.
 
 ### Articles de conférence
 

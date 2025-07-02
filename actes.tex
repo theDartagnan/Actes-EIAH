@@ -26,7 +26,20 @@
 \usepackage[export]{adjustbox}
 \usepackage{tocloft}
 \usepackage{blindtext}
-\usepackage[hidelinks]{hyperref}
+
+% Métadonnées du document pdf généré. 
+% pdfauthor: à changer, les auteurs des actes
+% pdftitle: à changer, le titre des actes
+% pdfsubject: changement optionnel, la "thématique" du document
+% pdfproducer: ne pas changer normalement (le logiciel producteur du document)
+% pdfcreate: ne pas changer normalement (le logiciel en charge de la création du document pdf)
+\usepackage[hidelinks,
+pdfauthor={Sonian Mandin et Mathieu Muratet},
+pdftitle={Rencontres Jeunes Chercheuses et Chercheurs en EIAH 2024, Laval},
+pdfsubject={Actes de conférence},
+pdfkeywords={Some Keywords},
+pdfproducer={Latex with hyperref},
+pdfcreator={pdflatex}]{hyperref}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DEFINITIONS GENERALES - A APADATER SELON CONF    %%
