@@ -121,9 +121,55 @@ pdfcreator={pdflatex}]{hyperref}
 	\newpage
 }
 
+% Afficher une liste d'auteurs en limitant possiblement l'affichage au premier avec le suffixe et al. si le nombre  dépasse 3.
+% Sinon affiche tous les auteurs, séparés par des virugle sauf pour le dernier, séparé avec un "et".
+% 1 - la liste d'auteurs (séparés par des virgules sans espace). Peut être un singleton
+\ExplSyntaxOn % nécessaire pour utiliser expl3
+\newcommand{\printAuthors}[1]{
+	% Le second paramètre (3) fixe le nombre maximal d'auteurs avant d'utiliser la forme compacte
+	\internal_print_authors:nn{#1}{3}
+}
+
+% Génère une ligne de TOC pour un article et ses auteurs
+% 1 - auteurs (séparés par des virgule si plusieurs)
+% 2 - titre long de l'article
+\newcommand{\paperTitleTocHeading}[2]{
+	#2 \newline \textit{\internal_print_authors:n{#1}}
+}
+
+% Fonction interne de génération d'une liste formatée d'auteur
+% 1 - liste d'auteurs (séparés par des virgule sans espace)
+% 2 - nombre maximal d'auteur avant d'utiliser la forme compacte "1er auteur et al."
+\cs_new_protected:Nn \internal_print_authors:nn {
+	% Définition des variables liste d'auteur (liste) et nombre max d'auteurs (int)
+	\clist_set:Nn \l_authors { #1 }
+	\tl_set:Nn \l_max_authors { #2 }
+	
+	\int_compare:nTF { \l_max_authors > 0 } {
+		\int_compare:nTF { \clist_count:N \l_authors > \l_max_authors } {
+			% Affichage compact: 1er auteur "et al."
+			\clist_item:Nn \l_authors { 1 }~et~al.
+		} {
+			% Liste complète d'auteur séparés par des virgule et un "et" pour le dernier
+			\clist_use:Nnnn \l_authors {~et~} {,~} {~et~}
+		}
+	} {
+		% Liste complète d'auteur séparés par des virgule et un "et" pour le dernier
+		\clist_use:Nnnn \l_authors {~et~} {,~} {~et~}
+	}
+}
+
+% Version simplifiée de la fonction avec comme valeur max d'auteurs 0 (desactive le compactage)
+\cs_new_protected:Nn \internal_print_authors:n {
+	\internal_print_authors:nn {#1} {0}
+}
+\ExplSyntaxOff
+
+% Fonction interne de génération
+
 % Ajoute un nouvel article aux actes
 % les 5 paramètres sont :
-%  1 - nom de l'auteur
+%  1 - Auteur(s) (si plusieurs, les séparer par des virgules sans espaces)
 %  2 - le titre court
 %  3 - le titre long
 %  4 - l'id
@@ -132,7 +178,7 @@ pdfcreator={pdflatex}]{hyperref}
 \newcommand{\addpaper}[5]{
     % la première page de l'article doit commencer sur une page paire
     \startOnEvenPage
-    \includepdf[pages={-}, pagecommand={\markboth{#1}{#2}}, fitpaper=false, addtotoc={1, subsection, 2, #3 \newline  \protect\textit{#1}, #4}]{#5}
+    \includepdf[pages={-}, pagecommand={\markboth{\printAuthors{#1}}{#2}}, fitpaper=false, addtotoc={1, subsection, 2, \protect\paperTitleTocHeading{#1}{#3}, #4}]{#5}
     
 }
 
@@ -192,8 +238,8 @@ pdfcreator={pdflatex}]{hyperref}
 %ART 2:
 \addpaper{Michael Zeyringer}{L'influence de questions éthiques dans l'usage ou le non-usage d'applications d'IA}{L'influence de questions éthiques dans l'usage ou le non-usage{,} par des professeurs des écoles{,} d'applications d'IA pour l'enseignement du français et des mathématiques}{ART02}{VendorPDF/RJC-EIAH_2024_Sources_2.pdf}
 
-%ART 20:
-\addpaper{Sophie Chane-Lune}{Un référentiel de compétences en programmation}{Un référentiel de compétences en programmation pour construire des ressources et des évaluations}{ART20}{VendorPDF/RJC-EIAH_2024_Sources_20.pdf}
+%ART 20 (exemple avec beaucoup d'auteurs):
+\addpaper{Sophie Chane-Lune,Valériane Loison,Mamoudou Ndiaye,Michael Zeyringer,Annie Joly,Angélique Ferrandon-Vepierre}{Un référentiel de compétences en programmation}{Un référentiel de compétences en programmation pour construire des ressources et des évaluations}{ART20}{VendorPDF/RJC-EIAH_2024_Sources_20.pdf}
 
 %%%%%%%%%%%%%%%% SESSION D'ARTICLES 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pageTitreSession[Animateur de session : Ludovic Hamon (Le Mans Université)]{Méthodes d'évaluation des dispositifs d'apprentissage / de formation dans les EIAH}
@@ -213,8 +259,8 @@ pdfcreator={pdflatex}]{hyperref}
 %ART 4:
 \addpaper{Angélique Ferrandon-Vepierre}{Designing a digitally-supported intervention process for school refusers}{Designing a digitally-supported intervention process for school refusers}{ART04}{VendorPDF/RJC-EIAH_2024_Sources_4.pdf}
 
-%ART 5:
-\addpaper{Marion Fontanie}{Enjeux éthiques et environnementaux du numérique à l’université}{Questionner l’éthique des usages du numérique dans l’enseignement supérieur et la recherche au prisme de leur impact environnemental : analyse du positionnement éthique des acteurs de l’ESR}{ART05}{VendorPDF/RJC-EIAH_2024_Sources_5.pdf}
+%ART 5 (exemple avec 2 auteurs):
+\addpaper{Marion Fontanie,Angélique Ferrandon-Vepierre}{Enjeux éthiques et environnementaux du numérique à l’université}{Questionner l’éthique des usages du numérique dans l’enseignement supérieur et la recherche au prisme de leur impact environnemental : analyse du positionnement éthique des acteurs de l’ESR}{ART05}{VendorPDF/RJC-EIAH_2024_Sources_5.pdf}
 
 % dernière session terminée, retour aux en-têtes généraux
 \resetHeadings
