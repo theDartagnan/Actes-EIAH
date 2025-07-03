@@ -26,6 +26,7 @@
 \usepackage[export]{adjustbox}
 \usepackage{tocloft}
 \usepackage{blindtext}
+\usepackage{imakeidx}
 
 % Métadonnées du document pdf généré. 
 % pdfauthor: à changer, les auteurs des actes
@@ -49,7 +50,7 @@ pdfcreator={pdflatex}]{hyperref}
 \definecolor{ConfColor}{HTML}{C30065}
 
 % En-têtes des pages paires/impaires (hors articles)
-\newcommand{\resetHeadings}{
+\newcommand{\proceedingsHeadings}{
 	\markboth{Sonian Mandin et Mathieu Muratet}{Rencontres Jeunes Chercheuses et Chercheurs en EIAH 2024, Laval}
 }
 
@@ -89,6 +90,7 @@ pdfcreator={pdflatex}]{hyperref}
 	\newpage
 }
 % Assure de faire commencer le prochain contenu sur une page impaire
+% Si une page blanche est insérée, celle-ci n'aura aucun en-tête
 \newcommand{\startOnOddPage}{
     \ifodd\value{page}
     \else
@@ -96,6 +98,7 @@ pdfcreator={pdflatex}]{hyperref}
     \fi
 }
 % Assure de faire commencer le prochain contenu sur une page paire
+% Si une page blanche est insérée, celle-ci n'aura aucun en-tête
 \newcommand{\startOnEvenPage}{
     \ifodd\value{page}
         \pageblanche[empty]{}
@@ -104,10 +107,10 @@ pdfcreator={pdflatex}]{hyperref}
 }
 
 \newcommand{\pageTitreSession}[2][]{%
-	\resetHeadings
+	% Retour au en-têtes des actes
+	\proceedingsHeadings
     % La page de titre doit être une page impaire
     \startOnOddPage
-	%\thispagestyle{empty}
 	\hspace{0pt}
 	\vfill
 	\logoConf[0.8]
@@ -137,6 +140,10 @@ pdfcreator={pdflatex}]{hyperref}
 	#2 \newline \textit{\internal_print_authors:n{#1}}
 }
 
+\newcommand{\addAuthorsToIndex}[1]{
+	\internal_add_authors_to_index:n{#1}
+}
+
 % Fonction interne de génération d'une liste formatée d'auteur
 % 1 - liste d'auteurs (séparés par des virgule sans espace)
 % 2 - nombre maximal d'auteur avant d'utiliser la forme compacte "1er auteur et al."
@@ -163,21 +170,31 @@ pdfcreator={pdflatex}]{hyperref}
 \cs_new_protected:Nn \internal_print_authors:n {
 	\internal_print_authors:nn {#1} {0}
 }
+
+% Pour chaque auteur d'une liste donnée, créer un enregistrement dans l'index
+\cs_new_protected:Nn \internal_add_authors_to_index:n {
+	\clist_set:Nn \l_authors { #1 }
+	\clist_map_variable:NNn  \l_authors \l_author {
+		\index{ \l_author}
+	}
+}
 \ExplSyntaxOff
 
 % Fonction interne de génération
 
 % Ajoute un nouvel article aux actes
 % les 5 paramètres sont :
-%  1 - Auteur(s) (si plusieurs, les séparer par des virgules sans espaces)
+%  1 - Auteur(s) (si plusieurs, les séparer par des virgules sans espaces), formatés pour la Toc et les en-têtes (ex.: Prénom Nom)
 %  2 - le titre court
 %  3 - le titre long
 %  4 - l'id
 %  5 - le chemin du pdf
+% 6 - Auteurs formatés pour l'index (ex.: Nom Prénom)
 % Exemple : \addpaper{Nom}{TitreCourt}{TitreLong}{ID}{pdfPath}
-\newcommand{\addpaper}[5]{
+\newcommand{\addpaper}[6]{
     % la première page de l'article doit commencer sur une page paire
     \startOnEvenPage
+    \addAuthorsToIndex{#6}
     \includepdf[pages={-}, pagecommand={\markboth{\printAuthors{#1}}{#2}}, fitpaper=false, addtotoc={1, subsection, 2, \protect\paperTitleTocHeading{#1}{#3}, #4}]{#5}
     
 }
@@ -186,9 +203,13 @@ pdfcreator={pdflatex}]{hyperref}
 %% DOCUMENT DES ACTES - A APADATER SELON CONF       %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Gestion de l'index des auteurs
+\indexsetup{level=\section,firstpagestyle=myheadings,noclearpage}
+\makeindex[title=Index des auteurs,options= -s index_style.ist] % Initialisation de l'index des auteurs
+
 \begin{document}
 \pagestyle{myheadings}
-\resetHeadings
+\proceedingsHeadings
 
 % Titre des actes
 \title{Rencontres Jeunes Chercheuses et Chercheurs en EIAH 2024, Laval}
@@ -233,48 +254,56 @@ pdfcreator={pdflatex}]{hyperref}
 \pageTitreSession[Animateur de session : Jean-Marie Gilliot (IMT Atlantique - Lab-STICC)]{Analyse d'usage(s) et de pratiques}
 
 %ART 1:
-\addpaper{Annie Joly}{Avoir de la présence dans la distance}{Avoir de la présence dans la distance : La communication entre l’apprenti et le formateur pendant des cours à distance}{ART01}{VendorPDF/RJC-EIAH_2024_Sources_1.pdf}
+\addpaper{Annie Joly}{Avoir de la présence dans la distance}{Avoir de la présence dans la distance : La communication entre l’apprenti et le formateur pendant des cours à distance}{ART01}{VendorPDF/RJC-EIAH_2024_Sources_1.pdf}{Joly Annie}
 
 %ART 2:
-\addpaper{Michael Zeyringer}{L'influence de questions éthiques dans l'usage ou le non-usage d'applications d'IA}{L'influence de questions éthiques dans l'usage ou le non-usage{,} par des professeurs des écoles{,} d'applications d'IA pour l'enseignement du français et des mathématiques}{ART02}{VendorPDF/RJC-EIAH_2024_Sources_2.pdf}
+\addpaper{Michael Zeyringer}{L'influence de questions éthiques dans l'usage ou le non-usage d'applications d'IA}{L'influence de questions éthiques dans l'usage ou le non-usage{,} par des professeurs des écoles{,} d'applications d'IA pour l'enseignement du français et des mathématiques}{ART02}{VendorPDF/RJC-EIAH_2024_Sources_2.pdf}{Zeyringer Michael}
 
 %ART 20 (exemple avec beaucoup d'auteurs):
-\addpaper{Sophie Chane-Lune,Valériane Loison,Mamoudou Ndiaye,Michael Zeyringer,Annie Joly,Angélique Ferrandon-Vepierre}{Un référentiel de compétences en programmation}{Un référentiel de compétences en programmation pour construire des ressources et des évaluations}{ART20}{VendorPDF/RJC-EIAH_2024_Sources_20.pdf}
+\addpaper{Sophie Chane-Lune,Valériane Loison,Mamoudou Ndiaye,Michael Zeyringer,Annie Joly,Angélique Ferrandon-Vepierre}{Un référentiel de compétences en programmation}{Un référentiel de compétences en programmation pour construire des ressources et des évaluations}{ART20}{VendorPDF/RJC-EIAH_2024_Sources_20.pdf}{Chane-Lune Sophie,Loison Valériane,Ndiaye Mamoudou,Zeyringer Michael,Joly Annie ,Ferrandon-Vepierre Angélique}
 
 %%%%%%%%%%%%%%%% SESSION D'ARTICLES 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pageTitreSession[Animateur de session : Ludovic Hamon (Le Mans Université)]{Méthodes d'évaluation des dispositifs d'apprentissage / de formation dans les EIAH}
 
 % ART 15:
-\addpaper{Valériane Loison}{Environnement virtuel de simulation dans la formation préclinique en Odontologie}{Environnement virtuel de simulation dans la formation préclinique en Odontologie – ressentis et retours d’expérience des étudiants à l’utilisation d’un simulateur de réalité virtuelle avec et sans visiocasque}{ART15}{VendorPDF/RJC-EIAH_2024_Sources_15.pdf}
+\addpaper{Valériane Loison}{Environnement virtuel de simulation dans la formation préclinique en Odontologie}{Environnement virtuel de simulation dans la formation préclinique en Odontologie – ressentis et retours d’expérience des étudiants à l’utilisation d’un simulateur de réalité virtuelle avec et sans visiocasque}{ART15}{VendorPDF/RJC-EIAH_2024_Sources_15.pdf}{Loison Valériane}
 
 %ART 17:
-\addpaper{Ying-Dong Liu}{Indicateurs pour évaluer l’expérience d’apprentissage des Serious Games sur appareil mobile}{Indicateurs pour évaluer l’expérience d’apprentissage des Serious Games sur appareil mobile}{ART17}{VendorPDF/RJC-EIAH_2024_Sources_17.pdf}
+\addpaper{Ying-Dong Liu}{Indicateurs pour évaluer l’expérience d’apprentissage des Serious Games sur appareil mobile}{Indicateurs pour évaluer l’expérience d’apprentissage des Serious Games sur appareil mobile}{ART17}{VendorPDF/RJC-EIAH_2024_Sources_17.pdf}{Liu Ying-Dong}
 
 %ART 18:
-\addpaper{Mamoudou Ndiaye}{Favoriser la mise en oeuvre de Serious Games}{Favoriser la mise en oeuvre de Serious Games : analyse des pratiques et retours d’expériences d’enseignants et d’ingénieurs pédagogiques}{ART18}{VendorPDF/RJC-EIAH_2024_Sources_18.pdf}
+\addpaper{Mamoudou Ndiaye}{Favoriser la mise en oeuvre de Serious Games}{Favoriser la mise en oeuvre de Serious Games : analyse des pratiques et retours d’expériences d’enseignants et d’ingénieurs pédagogiques}{ART18}{VendorPDF/RJC-EIAH_2024_Sources_18.pdf}{Ndiaye Mamoudou}
 
 %%%%%%%%%%%%%%%% SESSION DE POSTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pageTitreSession{Articles courts (présentés sous forme de posters)}
 
 %ART 4:
-\addpaper{Angélique Ferrandon-Vepierre}{Designing a digitally-supported intervention process for school refusers}{Designing a digitally-supported intervention process for school refusers}{ART04}{VendorPDF/RJC-EIAH_2024_Sources_4.pdf}
+\addpaper{Angélique Ferrandon-Vepierre}{Designing a digitally-supported intervention process for school refusers}{Designing a digitally-supported intervention process for school refusers}{ART04}{VendorPDF/RJC-EIAH_2024_Sources_4.pdf}{Ferrandon-Vepierre Angélique}
 
 %ART 5 (exemple avec 2 auteurs):
-\addpaper{Marion Fontanie,Angélique Ferrandon-Vepierre}{Enjeux éthiques et environnementaux du numérique à l’université}{Questionner l’éthique des usages du numérique dans l’enseignement supérieur et la recherche au prisme de leur impact environnemental : analyse du positionnement éthique des acteurs de l’ESR}{ART05}{VendorPDF/RJC-EIAH_2024_Sources_5.pdf}
+\addpaper{Marion Fontanie,Angélique Ferrandon-Vepierre}{Enjeux éthiques et environnementaux du numérique à l’université}{Questionner l’éthique des usages du numérique dans l’enseignement supérieur et la recherche au prisme de leur impact environnemental : analyse du positionnement éthique des acteurs de l’ESR}{ART05}{VendorPDF/RJC-EIAH_2024_Sources_5.pdf}{Fontanie Marion,Ferrandon-Vepierre Angélique}
 
-% dernière session terminée, retour aux en-têtes généraux
-\resetHeadings
+% dernière session terminée, retour aux en-têtes des actes
+\proceedingsHeadings
 
 %%%%%%%%%%%%%%%% Symposia %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pageTitreSession{Ateliers}
 \input{Content/symposia}
+\clearpage % fin de page garanti
 
 %%%%%%%%%%%%%%%% Partenaires %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\startOnOddPage % Faire commencer la première page des partenaires sur une page impaire
-\newpage
+% On s'assure de sauter une page et commencer en page paire : s'as
+\startOnEvenPage
 \vspace*{2em}
 \section{Partenaires}
 \input{Content/partenaires}
+\clearpage % garantie de finir la page
+
+%%%%%%%%%%%%%%%% Table des auteurs %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\startOnEvenPage
+\vspace*{2em}
+\printindex
+\clearpage
 
 %%%%%%%%%%%%%%%% 4ème de couverture %%%%%%%%%%%%%%%%
 \input{Content/pageFin}

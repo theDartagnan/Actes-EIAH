@@ -18,6 +18,7 @@ Ce projet fourni un modèle complet d'actes de conférences francophones fondés
 ## Structure du projet
 
 - __actes.tex__ : point d'entrée Latex. Contient la structure de l'ensemble du manuscrit et la définition des commandes principales.
+- __index_style.ist__: ficher de style de l'index des auteurs
 - __VendorPDF/__ : dossier des fichiers pdf de chaque article des actes.
 - __Content/__ : contient les fichiers Latex des autres sections (ex.: comité, conférenciers invité, pages de garde et de fin...) ansi que le dossier des illustrations des actes __figures__ (logo des partenaires, de la conférence...)
 
@@ -36,15 +37,15 @@ Les métdonnées sont définies en début de fichier des _lignes 36 à 42_. Au m
 
 ### Informations générales
 
-- _ligne 49_ : couleur principale des titres principaux : peut-être par exemple en accord avec la charte graphique de l'hôte de la conférence.
-- _lignes 52-54_ : en-têtes des pages hors articles : Auteurs des actes en pages paires, titre des actes en pages impaires.
-- _lignes 57-62_ : logo de la conférence : lien vers le logo de la conférence (utilisé à plusieurs reprise : page de garde, pages de titre de session, page de fin).
-- _ligne 194_ : titre de la conférence.
-- _lignes 197 et 198_ : auteurs des actes.
+- _ligne 50_ : couleur principale des titres principaux : peut-être par exemple en accord avec la charte graphique de l'hôte de la conférence.
+- _lignes 53-55_ : en-têtes des pages hors articles : Auteurs des actes en pages paires, titre des actes en pages impaires.
+- _lignes 58-63_ : logo de la conférence : lien vers le logo de la conférence (utilisé à plusieurs reprise : page de garde, pages de titre de session, page de fin).
+- _ligne 215_ : titre de la conférence.
+- _lignes 218 et 219_ : auteurs des actes.
 
 ### contenu avant articles
 
-Plusieurs pages particulières et sections peuvent être ajoutées en amont des articles des actes. Ce projet propose la structure suivante entre les _lignes 201 à 230_ : 
+Plusieurs pages particulières et sections peuvent être ajoutées en amont des articles des actes. Ce projet propose la structure suivante entre les _lignes 222 à 251_ : 
 - page de garde ;
 - Table des matière ;
 - Comités de programme, d'organisation... ;
@@ -55,7 +56,7 @@ Pour chaque section après la table des matières, le contenu est situé dans un
 
 Si une page débute par le logo de la conférence (ex.: Introduction) par la commande __\logoConf__, il peut être souhaitable d'aligner verticalement les titres des autres section pour garantir d'une homogénéité visuelle. Dans ce cas, les sections sans le logo seront précédées par un espace blanc __\vspace*{2em}__.
 
-Les commandes __\startOnOddPage__ (exemple _ligne 226_)permettent d'assurer que le contenu suivant la commande soit affiché sur une page impaire.
+Les commandes __\startOnOddPage__ (exemple _ligne 247_) permettent d'assurer que le contenu suivant la commande soit affiché sur une page impaire.
 
 ### Articles de conférence
 
@@ -78,31 +79,24 @@ Exemple :
 
 #### Insertion des articles
 
-les articles sont positionnés avec la structure suivante (ex. d'une session d'articles des lignes 233 à 243).
+les articles sont positionnés avec la structure suivante (ex. d'une session d'articles des lignes 254 à 263).
 
-Un nouvel article est ajouté à l'aide de la commande __\addpaper__ (ex.: ligne 189). Cette commande accepte 5 paramètres :
-1. le nom de l'auteur ;
+Un nouvel article est ajouté à l'aide de la commande __\addpaper__ (ex.: ligne 257). Cette commande accepte 6 paramètres :
+1. la liste des auteurs au format "Prénom Nom" séparés par des virgules sans espace de part et d'autre ;
 2. le titre court de l'article ;
 3. le titre long de l'article ;
 4. l'identifiant unique de l'article (choix arbitraire mais l'identifiant doit être unique pour chaque article des actes) ;
-5. le chemin vers le pdf de l'article.
+5. le chemin vers le pdf de l'article ;
+6. la liste des auteurs au format "Nom Prénom" séparés par des virgules sans espace de part et d'autre (pour l'index).
 
 Chaque nouvel article sera ajouté de manière à ce qu'il commence sur une page paire (gauche).
 
 Exemple :
 ```
-\addpaper{Sophie Chane-Lune}{Un référentiel de compétences en programmation}{Un référentiel de compétences en programmation pour construire des ressources et des évaluations}{ART20}{VendorPDF/RJC-EIAH_2024_Sources_20.pdf}
+\addpaper{Marion Fontanie,Angélique Ferrandon-Vepierre}{Enjeux éthiques et environnementaux du numérique à l’université}{Questionner l’éthique des usages du numérique dans l’enseignement supérieur et la recherche au prisme de leur impact environnemental : analyse du positionnement éthique des acteurs de l’ESR}{ART05}{VendorPDF/RJC-EIAH_2024_Sources_5.pdf}{Fontanie Marion,Ferrandon-Vepierre Angélique}
 ```
 
 Après avoir inséré toutes les sessions de présentation et article la comande __\resetHeadings__ permet de remettre les en-têtes généraux des actes (auteurs et titre des actes). Elle est automatiquement invoquée par la commande __\pageTitreSession__ (pour avoir les en-têtes généraux sur la page de titre de session), mais est à appeler après l'article de la dernière session pour retrouver les en-têtes généraux sur les pages suivantes.
-
-#### Détails de la commande \includepdf
-
-Exemple : 
-
-```
-\includepdf[pages={-}, pagecommand={\markboth{Estelle Prior}{Partage des savoirs dans une réunion de co-conception de jeux épistémiques numériques...}}, fitpaper=false, addtotoc={1, subsection, 2, Partage des savoirs dans une réunion de co-conception de jeux épistémiques numériques en recherche orientée par la conception\newline\textit{Estelle Prior}, ART10}]{VendorPDF/10.pdf}
-```
 
 ### Contenu après articles de fin
 
@@ -112,6 +106,15 @@ Plusieurs pages particulière, ou sections peuvent être ajoutées en aval des a
 - page de fin.
 
 Comme pour les sections avant articles, le contenu de ces sections est situé dans un fichier .tex dédié du dossier _Content_. Après une section, la commande \newpage permet de forcer le passage à la page suivante.
+
+### Index des auteurs
+
+Un index des auteurs est généré automatiquement :
+- son entrée est présente dans la table des matière ;
+- l’index reprend chaque auteur par ordre alphabétique classé par nom puis par prénom ;
+- pour chaque auteur l’index mentionne le numéro de première page de chaque article dont il est auteur (comme pour la table des matière le numéro est une hyperref cliquable) ;
+- le titre de l’index lui-même est modifiable à la ligne 202 du fichier principal tex ;
+- l’index est personnalisé pour faire apparaitre les lettres de l’alphabet en gras comme préfixe de catégorie d'auteurs et pour afficher des points entre les auteur et les numéros de page. Ce style peut être modifié depuis le fichier index_style.ist.
 
 ## Compilation
 
